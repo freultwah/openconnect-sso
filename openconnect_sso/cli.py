@@ -95,6 +95,20 @@ def create_argparser():
         default="4.7.00136",
     )
 
+    network_settings = parser.add_argument_group("Network")
+    network_settings.add_argument(
+        "--connect-timeout",
+        type=float,
+        default=None,
+        help="HTTP connect timeout in seconds (overrides config if set)",
+    )
+    network_settings.add_argument(
+        "--read-timeout",
+        type=float,
+        default=None,
+        help="HTTP read timeout in seconds (overrides config if set)",
+    )
+
     parser.add_argument(
         "-l",
         "--log-level",

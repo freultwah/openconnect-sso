@@ -150,6 +150,8 @@ class Config(ConfigNode):
         },
     )
     on_disconnect = attr.ib(converter=str, default="")
+    connect_timeout = attr.ib(default=5.0, converter=float)
+    read_timeout = attr.ib(default=30.0, converter=float)
 
 
 class DisplayMode(enum.Enum):

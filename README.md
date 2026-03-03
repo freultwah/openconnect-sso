@@ -121,6 +121,22 @@ Configuration is saved in `$XDG_CONFIG_HOME/openconnect-sso/config.toml`. On
 typical Linux installations it is located under
 `$HOME/.config/openconnect-sso/config.toml`
 
+### Network timeouts
+
+HTTP timeouts are configurable both in the config file and on the CLI. Defaults
+are 5 seconds for connect and 30 seconds for read. CLI flags override config:
+
+```shell
+openconnect-sso --connect-timeout 10 --read-timeout 60 --server vpn.server.com/group
+```
+
+Config example:
+
+```
+connect_timeout = 10
+read_timeout = 60
+```
+
 For CISCO-VPN and TOTP the following seems to work by tuning the config.toml
 and removing the default "submit"-action to the following:
 

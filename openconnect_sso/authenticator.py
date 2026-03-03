@@ -8,13 +8,24 @@ from openconnect_sso.saml_authenticator import authenticate_in_browser
 
 logger = structlog.get_logger()
 
+DEFAULT_TIMEOUT = (5.0, 30.0)
+
 
 class Authenticator:
-    def __init__(self, host, proxy=None, credentials=None, version=None):
+    def __init__(
+        self,
+        host,
+        proxy=None,
+        credentials=None,
+        version=None,
+        connect_timeout=DEFAULT_TIMEOUT[0],
+        read_timeout=DEFAULT_TIMEOUT[1],
+    ):
         self.host = host
         self.proxy = proxy
         self.credentials = credentials
         self.version = version
+        self.timeout = (float(connect_timeout), float(read_timeout))
         self.session = create_http_session(proxy, version)
 
     async def authenticate(self, display_mode):
@@ -55,7 +66,7 @@ class Authenticator:
     def _detect_authentication_target_url(self):
         # Follow possible redirects in a GET request
         # Authentication will occur using a POST request on the final URL
-        response = requests.get(self.host.vpn_url)
+        response = requests.get(self.host.vpn_url, timeout=self.timeout)
         response.raise_for_status()
         self.host.address = response.url
         logger.debug("Auth target url", url=self.host.vpn_url)
@@ -63,7 +74,7 @@ class Authenticator:
     def _start_authentication(self):
         request = _create_auth_init_request(self.host, self.host.vpn_url, self.version)
         logger.debug("Sending auth init request", content=request)
-        response = self.session.post(self.host.vpn_url, request)
+        response = self.session.post(self.host.vpn_url, request, timeout=self.timeout)
         logger.debug("Auth init response received", content=response.content)
         return parse_response(response)
 
@@ -77,7 +88,7 @@ class Authenticator:
             self.host, auth_request_response, sso_token, self.version
         )
         logger.debug("Sending auth finish request", content=request)
-        response = self.session.post(self.host.vpn_url, request)
+        response = self.session.post(self.host.vpn_url, request, timeout=self.timeout)
         logger.debug("Auth finish response received", content=response.content)
         return parse_response(response)
 
