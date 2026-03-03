@@ -40,6 +40,18 @@ effect. ✨ 🌟 ✨
 Of course you can also install via `pip` instead of `pipx` if you'd like to
 install system-wide or a virtualenv of your choice.
 
+### Local development with venv
+
+Editable installs require a PEP 660-capable pip (pip 21.3+) and a compatible
+`lxml` build. For Python 3.13+ this project requires `lxml>=5.3`.
+
+```shell
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -e ".[full]"
+```
+
 ### On Arch Linux
 
 There is an unofficial package available for Arch Linux on
