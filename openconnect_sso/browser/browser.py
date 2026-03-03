@@ -16,7 +16,6 @@ class Browser:
         self._urls = asyncio.Queue()
         self.url = None
         self.cookies = {}
-        self.loop = asyncio.get_event_loop()
         self.proxy = proxy
         self.display_mode = display_mode
 
@@ -25,12 +24,12 @@ class Browser:
         self.browser_proc.start()
         self.running = True
 
-        self.updater = asyncio.ensure_future(self._update_status())
+        self.updater = asyncio.create_task(self._update_status())
 
         def stop(_task):
             self.running = False
 
-        asyncio.ensure_future(self.browser_proc.wait()).add_done_callback(stop)
+        asyncio.create_task(self.browser_proc.wait()).add_done_callback(stop)
 
     async def _update_status(self):
         while self.running:
