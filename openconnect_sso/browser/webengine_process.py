@@ -111,6 +111,9 @@ class Process(multiprocessing.Process):
 
         web.authenticate_at(QUrl(startup_info.url), startup_info.credentials)
 
+        # Explicitly size the main window so QR codes fit comfortably.
+        web.resize(1000, 800)
+        logger.info("Main window size", size=str(web.size()))
         web.show()
         rc = app.exec()
 
